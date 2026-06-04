@@ -133,8 +133,18 @@ combatSystem.useSkill = function (skillKey) {
   const hpBefore = this.enemyCurrentHP;
   _origUseSkill(skillKey);
   const dealt = hpBefore - this.enemyCurrentHP;
-  if (dealt > 0) gameStats.recordHit(dealt);
-  else gameStats.recordAction();
+  if (dealt > 0) {
+    gameStats.recordHit(dealt);
+    // Apply weapon status effect on hit (35% chance per skill use)
+    if (skillKey !== 'scan') {
+      const weapon = equipmentSystem.equipped.weapon;
+      if (weapon?.statusEffect && Math.random() < 0.35) {
+        this.applyEnemyStatus(weapon.statusEffect);
+      }
+    }
+  } else {
+    gameStats.recordAction();
+  }
 };
 
 const _origUseItem = combatSystem.useItem.bind(combatSystem);
@@ -1017,6 +1027,13 @@ function gameLoop(now) {
   lastTime = now;
   const delta = Math.min(rawDelta, 0.1);
   if (_actionCooldown > 0) _actionCooldown -= delta;
+
+  // Override terrain to 'water' when player stands in a lagoonCoast water pool
+  if (env.currentZone === 'lagoonCoast') {
+    const px = player.position.x, pz = player.position.z;
+    const inWater = env.getLagoonWaterCircles().some(w => Math.hypot(px - w.x, pz - w.z) < w.r);
+    player.currentTerrain = inWater ? 'water' : 'grass';
+  }
 
   // Update player
   player.update(keysDown, delta, touchInput);

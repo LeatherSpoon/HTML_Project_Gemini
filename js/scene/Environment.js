@@ -123,6 +123,7 @@ export class Environment {
     this._growingTrees = [];
     this._treePlacedPositions = [];
     this._revealMaterials = [];
+    this._lagoonWaterCircles = [];
     // Reset per-zone interactable station positions
     this._offloadStationPos = null;
     this._fabricatorPos = null;
@@ -358,6 +359,7 @@ export class Environment {
   getPortals() { return this._zonePortals; }
 
   getCollisionCircles() { return this._collisionCircles; }
+  getLagoonWaterCircles() { return this._lagoonWaterCircles; }
 
   /** Show or hide all floor grid helpers (called when construction panel opens/closes). */
   setGridVisible(v) {
@@ -1332,7 +1334,7 @@ export class Environment {
     this._addGround(0xc2b280); // sand
     const rng = seededRandom(88888); // deterministic layout
 
-    // Water areas — positions stored to exclude tree placement
+    // Water areas — positions stored for terrain override and to exclude tree placement
     const waterCircles = [];
     for (let i = 0; i < 6; i++) {
       const r = 3 + rng() * 4;
@@ -1348,6 +1350,8 @@ export class Environment {
       water.position.set(wx, 0.02, wz);
       this.group.add(water);
     }
+
+    this._lagoonWaterCircles = waterCircles;
 
     // Palm trees — skip positions inside water circles
     for (let i = 0; i < 10; i++) {

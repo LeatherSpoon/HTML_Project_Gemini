@@ -2196,13 +2196,100 @@ export class HUD {
     }
   }
 
-  // ── Stubs ─────────────────────────────────────────────────────────────────
-  // Panels that were scaffolded in HTML/dispatch but never had their wire/refresh
-  // methods written. Stubs prevent constructor + panel-open crashes while leaving
-  // the panels in their existing non-functional state.
-  _wireCodexButton()      {}
-  _wireAscensionButton()  {}
-  _refreshCodex()         {}
-  _refreshAscension()     {}
+  _refreshCodex() {
+    const el = document.getElementById('codex-contents');
+    if (!el || !this.codex) return;
+    el.innerHTML = '';
+
+    const entries = this.codex.getEntries();
+    const discovered = entries.filter(e => e.discovered);
+    const total = entries.length;
+
+    const summary = document.createElement('div');
+    summary.style.cssText = 'text-align:center;color:#88ccff;font-size:0.75rem;margin-bottom:10px;';
+    summary.textContent = `Discovered: ${discovered.length} / ${total}`;
+    el.appendChild(summary);
+
+    const categories = ['Material', 'Enemy', 'Crafted', 'Zone'];
+    for (const cat of categories) {
+      const catEntries = entries.filter(e => e.category === cat);
+      if (catEntries.length === 0) continue;
+
+      const title = document.createElement('div');
+      title.className = 'panel-subtitle';
+      title.style.marginTop = '10px';
+      title.textContent = cat;
+      el.appendChild(title);
+
+      for (const entry of catEntries) {
+        const row = document.createElement('div');
+        row.style.cssText = 'padding:5px 0;border-bottom:1px solid #44aaff22;';
+        if (entry.discovered) {
+          row.innerHTML = `<div style="color:#88ccff;font-size:0.8rem;font-weight:bold;">${entry.label}</div><div style="color:#556677;font-size:0.7rem;margin-top:2px;">${entry.flavor}</div>`;
+        } else {
+          row.innerHTML = `<div style="color:#334455;font-size:0.8rem;">???</div>`;
+        }
+        el.appendChild(row);
+      }
+    }
+  }
+
+  _refreshAscension() {
+    const el = document.getElementById('ascension-contents');
+    if (!el || !this.ascension) return;
+    el.innerHTML = '';
+
+    const asc = this.ascension;
+    const canAscend = asc.canAscend();
+
+    // Status block
+    const status = document.createElement('div');
+    status.style.cssText = 'text-align:center;margin-bottom:12px;';
+    status.innerHTML = `
+      <div style="color:#cc88ff;font-size:1rem;font-weight:bold;letter-spacing:2px;">ASCENSION ${asc.ascensionCount}</div>
+      <div style="color:#9966cc;font-size:0.75rem;margin-top:4px;">${asc.ascensionPoints} AP available</div>
+      <div style="color:#556677;font-size:0.7rem;margin-top:4px;">Next threshold: ${asc.ascensionThreshold.toLocaleString()} PP cap</div>`;
+    el.appendChild(status);
+
+    // Ascend button
+    const ascBtn = document.createElement('button');
+    ascBtn.className = 'stat-up-btn';
+    ascBtn.style.cssText = `width:100%;margin-bottom:14px;border-color:${canAscend ? '#cc88ff' : '#442255'};color:${canAscend ? '#cc88ff' : '#553366'};`;
+    ascBtn.textContent = canAscend ? '⬆ ASCEND (Reset PP cap for AP)' : `Need ${asc.ascensionThreshold.toLocaleString()} PP cap`;
+    ascBtn.disabled = !canAscend;
+    ascBtn.addEventListener('click', () => {
+      asc.ascend();
+      this._refreshAscension();
+    });
+    el.appendChild(ascBtn);
+
+    // Upgrades
+    const upgradeTitle = document.createElement('div');
+    upgradeTitle.className = 'panel-subtitle';
+    upgradeTitle.textContent = 'Amplifiers';
+    el.appendChild(upgradeTitle);
+
+    for (const upg of asc.getUpgrades()) {
+      const row = document.createElement('div');
+      row.style.cssText = 'display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #cc88ff22;';
+
+      const info = document.createElement('div');
+      info.style.flex = '1';
+      info.innerHTML = `<div style="color:#cc88ff;font-size:0.8rem;">${upg.label} <span style="color:#9966cc;">(${upg.value})</span></div><div style="color:#556677;font-size:0.7rem;">${upg.desc}</div>`;
+      row.appendChild(info);
+
+      const btn = document.createElement('button');
+      btn.className = 'stat-up-btn';
+      const canAfford = asc.ascensionPoints >= upg.cost;
+      btn.style.cssText = `border-color:${canAfford ? '#cc88ff44' : '#33223344'};color:${canAfford ? '#cc88ff88' : '#443355'};`;
+      btn.textContent = `${upg.cost} AP`;
+      btn.disabled = !canAfford;
+      btn.addEventListener('click', () => {
+        if (asc.buyUpgrade(upg.id)) this._refreshAscension();
+      });
+      row.appendChild(btn);
+      el.appendChild(row);
+    }
+  }
 
 }

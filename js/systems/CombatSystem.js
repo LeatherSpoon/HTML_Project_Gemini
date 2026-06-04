@@ -14,6 +14,8 @@ export class CombatSystem {
 
     // Status effects on player: { type, remainingTicks }
     this.playerEffects = [];
+    // Status effects on enemy: { type, remainingTicks }
+    this.enemyEffects = [];
 
     // Callbacks wired by CombatUI / main.js
     this.onLog = null;
@@ -21,6 +23,7 @@ export class CombatSystem {
     this.onHPUpdate = null;
     this.onCombatEnd = null;
     this.onStatusUpdate = null;
+    this.onEnemyStatusUpdate = null; // fn(effects)
     this.onRescue = null;
     this.onWindup = null;   // fn(isCharging) — called for swinger wind-up
     this.onBurstStart = null; // fn() — for burst attacker animation
@@ -32,6 +35,7 @@ export class CombatSystem {
     this.enemy = enemy;
     this.enemyCurrentHP = enemy.maxHP;
     this.playerEffects = [];
+    this.enemyEffects = [];
 
     this._log(`A wild ${enemy.name} appears!`);
     this._emitHP();
@@ -172,11 +176,39 @@ export class CombatSystem {
     if (this.onStatusUpdate) this.onStatusUpdate(this.playerEffects);
   }
 
+  // ── Enemy Status Effects ───────────────────────────────────────────────────
+  applyEnemyStatus(type) {
+    const def = CONFIG.STATUS_EFFECTS[type];
+    if (!def) return;
+    if (this.enemyEffects.find(e => e.type === type)) return;
+    this.enemyEffects.push({ type, remainingTicks: def.durationTicks });
+    this._log(`${this.enemy.name} is afflicted with ${def.label}!`);
+    if (this.onEnemyStatusUpdate) this.onEnemyStatusUpdate(this.enemyEffects);
+  }
+
+  _tickEnemyEffects() {
+    for (let i = this.enemyEffects.length - 1; i >= 0; i--) {
+      const eff = this.enemyEffects[i];
+      const def = CONFIG.STATUS_EFFECTS[eff.type];
+      if (def.tickDamage) {
+        this._dealDamageToEnemy(def.tickDamage);
+        if (!this.active) return; // enemy died from DoT
+        this._log(`${def.label} deals ${def.tickDamage} to ${this.enemy.name}!`);
+      }
+      eff.remainingTicks--;
+      if (eff.remainingTicks <= 0) {
+        this.enemyEffects.splice(i, 1);
+        this._log(`${def.label} on ${this.enemy.name} wears off.`);
+      }
+    }
+    if (this.onEnemyStatusUpdate) this.onEnemyStatusUpdate(this.enemyEffects);
+  }
+
   // ── Player actions ─────────────────────────────────────────────────────────
   fight() {
     if (!this.active) return;
     const dmg = this.stats.damage;
-    this._dealDamageToEnemy(dmg);
+    this._dealDamageAndTick(dmg);
     this._log(`You attack for ${dmg} damage!`);
   }
 
@@ -187,14 +219,17 @@ export class CombatSystem {
 
     if (skillKey === 'scan') {
       if (!this.stats.spendFP(skill.fp)) { this._log('Not enough FP!'); return; }
-      this._log(`Scan: ${this.enemy.name} — HP ${this.enemyCurrentHP}/${this.enemy.maxHP}, ATK ${this.enemy.damage}, Pattern: ${this.enemy.attackPattern}`);
+      const effectStr = this.enemyEffects.length
+        ? ` | Effects: ${this.enemyEffects.map(e => e.type).join(', ')}`
+        : '';
+      this._log(`Scan: ${this.enemy.name} — HP ${this.enemyCurrentHP}/${this.enemy.maxHP}, ATK ${this.enemy.damage}, Pattern: ${this.enemy.attackPattern}${effectStr}`);
       if (this.onFPUpdate) this.onFPUpdate(this.stats.currentFP, this.stats.maxFP);
       return;
     }
 
     if (!this.stats.spendFP(skill.fp)) { this._log('Not enough FP!'); return; }
     const dmg = Math.floor(this.stats.damage * skill.mult);
-    this._dealDamageToEnemy(dmg);
+    this._dealDamageAndTick(dmg);
     this._log(`${skill.label}! You deal ${dmg} damage.`);
     if (this.onFPUpdate) this.onFPUpdate(this.stats.currentFP, this.stats.maxFP);
   }
@@ -232,6 +267,11 @@ export class CombatSystem {
     }
   }
 
+  _dealDamageAndTick(dmg) {
+    this._dealDamageToEnemy(dmg);
+    if (this.active && this.enemyEffects.length > 0) this._tickEnemyEffects();
+  }
+
   _endCombat(won, fled = false) {
     if (!this.active) return;
     this.active = false;
@@ -246,6 +286,8 @@ export class CombatSystem {
     if (this.enemy && this.enemy.setCharging) this.enemy.setCharging(false);
 
     this._clearStatusEffects();
+    this.enemyEffects = [];
+    if (this.onEnemyStatusUpdate) this.onEnemyStatusUpdate([]);
 
     if (won) {
       const pp = this.enemy.ppReward;
