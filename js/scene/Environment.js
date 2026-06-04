@@ -205,7 +205,7 @@ export class Environment {
     if (idx !== -1) this._collisionCircles.splice(idx, 1);
 
     const timber = 1 + Math.floor(Math.random() * 2); // 1–2 timber
-    return { timber, seed: 1 };                        // always yields a seed
+    return { timber, verdanite: 1 };                   // always yields a verdanite
   }
 
   plantTree(x, z) {
@@ -263,7 +263,7 @@ export class Environment {
     }
     // Ferrous ore drops from any mine block alongside the regular ore
     if (Math.random() < 0.15 * oreChanceMult) {
-      loot.ferrous_ore = (loot.ferrous_ore || 0) + 1;
+      loot.tobarba = (loot.tobarba || 0) + 1;
     }
 
     if (rock.richness <= 0) {
@@ -441,8 +441,8 @@ export class Environment {
         { x: 4, z: -7, type: 'resin',  requiredTool: 'harvestBlade' },
         { x: -4, z: -5, type: 'silica', requiredTool: 'harvestBlade' },
         { x: 9, z: 6, type: 'quartz',  requiredTool: 'harvestBlade' },
-        { x: -10, z: -6, type: 'carbon_biomass', requiredTool: 'harvestBlade' },
-        { x: 11, z: -4, type: 'carbon_biomass',  requiredTool: 'harvestBlade' },
+        { x: -10, z: -6, type: 'verdanite', requiredTool: 'harvestBlade' },
+        { x: 11, z: -4, type: 'verdanite',  requiredTool: 'harvestBlade' },
       ];
       case 'lagoonCoast': return [
         { x: 5, z: 5, type: 'silica', requiredTool: 'diveTool' },
@@ -450,16 +450,16 @@ export class Environment {
         { x: 3, z: -6, type: 'copper' },
         { x: -5, z: -3, type: 'quartz', requiredTool: 'diveTool' },
         { x: 8, z: -2, type: 'iron' },
-        { x: -9, z: -5, type: 'silica_sand' },
-        { x: 10, z: 7, type: 'silica_sand' },
+        { x: -9, z: -5, type: 'basalva' },
+        { x: 10, z: 7, type: 'basalva' },
       ];
       case 'frozenTundra': return [
-        { x: 4, z: 3, type: 'titanium', requiredTool: 'cryoPick' },
-        { x: -5, z: 5, type: 'titanium', requiredTool: 'cryoPick' },
-        { x: 7, z: -4, type: 'tungsten', requiredTool: 'cryoPick' },
-        { x: -8, z: -3, type: 'tungsten', requiredTool: 'cryoPick' },
-        { x: 2, z: -7, type: 'silver' },
-        { x: -3, z: 7, type: 'silver' },
+        { x: 4, z: 3, type: 'fractalite', requiredTool: 'cryoPick' },
+        { x: -5, z: 5, type: 'fractalite', requiredTool: 'cryoPick' },
+        { x: 7, z: -4, type: 'tobarba', requiredTool: 'cryoPick' },
+        { x: -8, z: -3, type: 'tobarba', requiredTool: 'cryoPick' },
+        { x: 2, z: -7, type: 'orosil' },
+        { x: -3, z: 7, type: 'orosil' },
         { x: 9, z: 5, type: 'iron' },
         { x: -6, z: -6, type: 'quartz' },
       ];
@@ -1230,8 +1230,8 @@ export class Environment {
     const rng = seededRandom(99999);
     const spacing = 3, half = 3;
     const depthProps = [
-      { tier: 5, ore: 'titanium', chance: 0.35, cost: 20, duration: 8.0,  color: 0x1a1a2a },
-      { tier: 6, ore: 'tungsten', chance: 0.40, cost: 30, duration: 12.0, color: 0x0f0f1a },
+      { tier: 5, ore: 'fractalite', chance: 0.35, cost: 20, duration: 8.0,  color: 0x1a1a2a },
+      { tier: 6, ore: 'tobarba',   chance: 0.40, cost: 30, duration: 12.0, color: 0x0f0f1a },
     ];
 
     for (let gi = -half; gi <= half; gi++) {

@@ -1,14 +1,15 @@
 export const MATERIALS = [
   'copper', 'timber', 'stone', 'iron', 'carbon', 'quartz', 'silica',
-  'fiber', 'silver', 'gold', 'titanium', 'tungsten', 'resin', 'epoxy',
-  'elastomer', 'magnet', 'glass', 'lumber', 'seed',
-  'circuitWire', 'ironSpike', 'powerCore', 'armorPlate', 'burstCapacitor', 'logicChip'
+  'fiber', 'orosil', 'gold', 'fractalite', 'stahlerte', 'resin', 'epoxy',
+  'aetherite', 'magnet', 'glass', 'holzura', 'verdanite',
+  'logicite', 'piedral', 'knochel', 'bronzura',
+  'basalva', 'tobarba', 'vitrion'
 ].map(id => ({
   id,
-  label: id.replace(/[A-Z]/g, m => ` ${m}`).replace(/^./, c => c.toUpperCase()),
+  label: id.charAt(0).toUpperCase() + id.slice(1),
   stackLimit: 99,
-  rarity: ['gold', 'silver', 'titanium', 'tungsten', 'powerCore', 'logicChip'].includes(id) ? 'rare' : 'common',
-  droneGatherable: !['seed', 'lumber'].includes(id)
+  rarity: ['gold', 'orosil', 'aetherite', 'logicite', 'fractalite', 'stahlerte'].includes(id) ? 'rare' : 'common',
+  droneGatherable: !['verdanite', 'holzura'].includes(id)
 }));
 
 export const MASTERY_TRACKS = [

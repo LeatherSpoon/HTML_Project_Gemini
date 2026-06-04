@@ -14,18 +14,16 @@ const CONSUMABLE_DEFS = {
 
 const MATERIAL_NAMES = [
   'copper', 'timber', 'stone', 'iron', 'carbon', 'quartz', 'silica',
-  'fiber', 'silver', 'gold', 'titanium', 'tungsten', 'resin', 'epoxy',
-  'elastomer', 'magnet', 'glass', 'lumber', 'seed',
-  // Enemy drops
-  'circuitWire', 'ironSpike', 'powerCore', 'armorPlate', 'burstCapacitor', 'logicChip',
+  'fiber', 'orosil', 'gold', 'fractalite', 'stahlerte', 'resin', 'epoxy',
+  'aetherite', 'magnet', 'glass', 'holzura', 'verdanite',
+  // Combat drops
+  'logicite', 'piedral', 'knochel', 'bronzura',
   // Factory Raw
-  'silica_sand', 'ferrous_ore', 'carbon_biomass',
+  'basalva', 'tobarba',
   // Factory Refined
-  'silicon_wafer', 'steel_ingot', 'synthetic_resin',
-  // Factory Components
-  'logic_processor', 'mechanical_servo', 'energy_capacitor',
-  // Factory Modules
-  'quantum_processor_ring', 'exo_servo_harness', 'aegis_capacitor_bank'
+  'vitrion',
+  // Factory Artifacts (one-time global buff)
+  'logicite_matrix', 'fractalite_frame', 'aetherite_core'
 ];
 
 export class InventorySystem {

@@ -23,7 +23,7 @@ const SCHEMATICS = [
     grid: [
       [null,         'alloy_bar',   null,        'alloy_bar',   null         ],
       ['alloy_bar',  'hull_plating','data_cable','hull_plating','alloy_bar'  ],
-      [null,         'data_cable',  'powerCore', 'data_cable',  null         ],
+      [null,         'data_cable',  'aetherite', 'data_cable',  null         ],
       ['alloy_bar',  'hull_plating','data_cable','hull_plating','alloy_bar'  ],
       [null,         'alloy_bar',   null,        'alloy_bar',   null         ],
     ],
@@ -36,7 +36,7 @@ const SCHEMATICS = [
     grid: [
       ['copper',  null,             'copper',    null,             'copper' ],
       [null,      'micro_fastener', 'data_cable','micro_fastener', null     ],
-      ['copper',  'data_cable',     'logicChip', 'data_cable',     'copper' ],
+      ['copper',  'data_cable',     'logicite',  'data_cable',     'copper' ],
       [null,      'micro_fastener', 'data_cable','micro_fastener', null     ],
       ['copper',  null,             'copper',    null,             'copper' ],
     ],

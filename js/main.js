@@ -519,7 +519,7 @@ window.addEventListener('blur', () => keysDown.clear());
 const { togglePanel } = initMenuController({ hud, telemetry, env });
 
 function _tryPlantSeed() {
-  if (inventorySystem.materials.seed <= 0) return;
+  if (inventorySystem.materials.verdanite <= 0) return;
   if (!statsSystem.spendEnergy(CONFIG.ENERGY_COST_PLANT)) {
     hud.showInteractHint('Not enough energy to plant!');
     return;
@@ -534,9 +534,9 @@ function _tryPlantSeed() {
     hud.showInteractHint('No room to plant here!');
     return;
   }
-  inventorySystem.removeMaterial('seed', 1);
+  inventorySystem.removeMaterial('verdanite', 1);
   env.plantTree(px, pz);
-  hud.showInteractHint('Seed planted!');
+  hud.showInteractHint('Verdanite planted!');
 }
 
 // ── Extended gathering: trees & rocks ────────────────────────────────────────
@@ -593,8 +593,8 @@ function handleExtendedGather(delta) {
         const result = env.clearTree(_gatherTarget);
         if (result) {
           inventorySystem.addMaterial('timber', result.timber);
-          if (result.seed > 0) inventorySystem.addMaterial('seed', result.seed);
-          hud.showInteractHint(`+${result.timber} timber${result.seed > 0 ? ' +1 seed' : ''}`);
+          if (result.verdanite > 0) inventorySystem.addMaterial('verdanite', result.verdanite);
+          hud.showInteractHint(`+${result.timber} timber${result.verdanite > 0 ? ' +1 verdanite' : ''}`);
           gameStats.recordGather(result.timber);
           inventorySystem.degradeTool('terrainCutter');
           questSystem.recordGather(env.currentZone, inventorySystem.materials);
@@ -648,7 +648,7 @@ function handleExtendedGather(delta) {
   // Priority: tree > rock
   if (_nearestTree && _gatherHintCooldown <= 0) {
     if (hasCutter) {
-      // Terrain Cutter: clear tree permanently for 1-2 timber + seed
+      // Terrain Cutter: clear tree permanently for 1-2 timber + verdanite
       if (statsSystem.currentEnergy >= _energyCost(CONFIG.ENERGY_COST_TREE)) {
         hud.showInteractHint('[E/ACT] Clear Tree (Terrain Cutter)');
         if (keysDown.has('KeyE') || touchInput.actionPressed) {

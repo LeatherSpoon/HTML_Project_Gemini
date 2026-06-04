@@ -8,16 +8,16 @@ const MISSION_ZONES = {
     { mat: 'iron', min: 2, max: 4 }, { mat: 'stone', min: 3, max: 6 }, { mat: 'carbon', min: 0, max: 2 },
   ]},
   verdantMaw: { label: 'Verdant Maw', duration: 240, loot: [
-    { mat: 'fiber', min: 3, max: 6 }, { mat: 'timber', min: 2, max: 5 }, { mat: 'seed', min: 0, max: 2 },
+    { mat: 'fiber', min: 3, max: 6 }, { mat: 'timber', min: 2, max: 5 }, { mat: 'verdanite', min: 0, max: 2 },
   ]},
   lagoonCoast: { label: 'Lagoon Coast', duration: 300, loot: [
     { mat: 'silica', min: 2, max: 4 }, { mat: 'quartz', min: 1, max: 3 }, { mat: 'resin', min: 1, max: 3 },
   ]},
   frozenTundra: { label: 'Frozen Tundra', duration: 360, loot: [
-    { mat: 'iron', min: 3, max: 6 }, { mat: 'silver', min: 1, max: 3 }, { mat: 'carbon', min: 1, max: 3 },
+    { mat: 'iron', min: 3, max: 6 }, { mat: 'orosil', min: 1, max: 3 }, { mat: 'carbon', min: 1, max: 3 },
   ]},
   spaceship: { label: 'Spaceship', duration: 200, loot: [
-    { mat: 'copper', min: 2, max: 5 }, { mat: 'quartz', min: 1, max: 3 }, { mat: 'circuitWire', min: 0, max: 2 },
+    { mat: 'copper', min: 2, max: 5 }, { mat: 'quartz', min: 1, max: 3 }, { mat: 'logicite', min: 0, max: 2 },
   ]},
 };
 

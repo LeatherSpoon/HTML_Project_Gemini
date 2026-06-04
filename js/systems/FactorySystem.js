@@ -9,9 +9,9 @@ export class FactorySystem {
     
     // Global buff tracks
     this.buffs = {
-      quantum_processor_ring: false,
-      exo_servo_harness: false,
-      aegis_capacitor_bank: false
+      logicite_matrix: false,
+      fractalite_frame: false,
+      aetherite_core: false
     };
 
     // Keep track of factory machine state
@@ -24,7 +24,7 @@ export class FactorySystem {
         isAutomated: false, 
         processingSpeed: 2.0, 
         yieldRatio: 1,
-        currentRecipe: 'steel_ingot',
+        currentRecipe: 'stahlerte',
         progress: 0.0
       },
       assembler: {
@@ -35,7 +35,7 @@ export class FactorySystem {
         isAutomated: false, 
         processingSpeed: 5.0, 
         yieldRatio: 1,
-        currentRecipe: 'logic_processor',
+        currentRecipe: 'logicite',
         progress: 0.0
       },
       fabricator: {
@@ -46,31 +46,34 @@ export class FactorySystem {
         isAutomated: false,
         processingSpeed: 10.0,
         yieldRatio: 1,
-        currentRecipe: 'quantum_processor_ring',
+        currentRecipe: 'logicite_matrix',
         progress: 0.0
       }
     };
 
     // Dictionary of recipes
     this.recipes = {
-      steel_ingot: { inputs: { ferrous_ore: 2 }, outputs: { steel_ingot: 1 } },
-      silicon_wafer: { inputs: { silica_sand: 2 }, outputs: { silicon_wafer: 1 } },
-      synthetic_resin: { inputs: { carbon_biomass: 2 }, outputs: { synthetic_resin: 1 } },
-      
-      logic_processor: { inputs: { silicon_wafer: 1, steel_ingot: 1 }, outputs: { logic_processor: 1 } },
-      mechanical_servo: { inputs: { steel_ingot: 1, synthetic_resin: 1 }, outputs: { mechanical_servo: 1 } },
-      energy_capacitor: { inputs: { silicon_wafer: 1, synthetic_resin: 1 }, outputs: { energy_capacitor: 1 } },
-      
-      quantum_processor_ring: { inputs: { logic_processor: 10, energy_capacitor: 5 }, outputs: { quantum_processor_ring: 1 } },
-      exo_servo_harness: { inputs: { mechanical_servo: 10, logic_processor: 5 }, outputs: { exo_servo_harness: 1 } },
-      aegis_capacitor_bank: { inputs: { energy_capacitor: 10, mechanical_servo: 5 }, outputs: { aegis_capacitor_bank: 1 } }
+      // Smelter — raw → refined
+      stahlerte: { inputs: { tobarba: 2 }, outputs: { stahlerte: 1 } },
+      vitrion:   { inputs: { basalva: 2 }, outputs: { vitrion: 1 } },
+      holzura:   { inputs: { verdanite: 2 }, outputs: { holzura: 1 } },
+
+      // Assembler — refined → component
+      logicite:   { inputs: { vitrion: 1, stahlerte: 1 }, outputs: { logicite: 1 } },
+      fractalite: { inputs: { stahlerte: 1, holzura: 1 }, outputs: { fractalite: 1 } },
+      aetherite:  { inputs: { vitrion: 1, holzura: 1 }, outputs: { aetherite: 1 } },
+
+      // Fabricator — component → artifact (one-time global buff)
+      logicite_matrix:  { inputs: { logicite: 10, aetherite: 5 }, outputs: { logicite_matrix: 1 } },
+      fractalite_frame: { inputs: { fractalite: 10, logicite: 5 }, outputs: { fractalite_frame: 1 } },
+      aetherite_core:   { inputs: { aetherite: 10, fractalite: 5 }, outputs: { aetherite_core: 1 } }
     };
-    
+
     // Mappings of what recipes belong to what machines
     this.machineRecipes = {
-      smelter: ['steel_ingot', 'silicon_wafer', 'synthetic_resin'],
-      assembler: ['logic_processor', 'mechanical_servo', 'energy_capacitor'],
-      fabricator: ['quantum_processor_ring', 'exo_servo_harness', 'aegis_capacitor_bank']
+      smelter:   ['stahlerte', 'vitrion', 'holzura'],
+      assembler: ['logicite', 'fractalite', 'aetherite'],
+      fabricator: ['logicite_matrix', 'fractalite_frame', 'aetherite_core']
     };
   }
 
@@ -108,18 +111,17 @@ export class FactorySystem {
   }
   
   giveOutput(item, qty) {
-    // If it's a global buff module
-    if (item === 'quantum_processor_ring' && !this.buffs.quantum_processor_ring) {
-      this.buffs.quantum_processor_ring = true;
-      this.ppSystem.globalMultiplier *= 1.20; 
+    // If it's a global buff artifact
+    if (item === 'logicite_matrix' && !this.buffs.logicite_matrix) {
+      this.buffs.logicite_matrix = true;
+      this.ppSystem.globalMultiplier *= 1.20;
       this.inventory.addMaterial(item, qty); // Store record in inventory for visuals
-    } else if (item === 'exo_servo_harness' && !this.buffs.exo_servo_harness) {
-      this.buffs.exo_servo_harness = true;
-      // Permanent speed buff using stats
+    } else if (item === 'fractalite_frame' && !this.buffs.fractalite_frame) {
+      this.buffs.fractalite_frame = true;
       this.statsSystem.stats.speed.level += 15; // 15 levels = +2.25 speed
       this.inventory.addMaterial(item, qty);
-    } else if (item === 'aegis_capacitor_bank' && !this.buffs.aegis_capacitor_bank) {
-      this.buffs.aegis_capacitor_bank = true;
+    } else if (item === 'aetherite_core' && !this.buffs.aetherite_core) {
+      this.buffs.aetherite_core = true;
       this.statsSystem.stats.health.level += 10; // 10 levels = 20 HP
       this.statsSystem.stats.energyCap.level += 5; // +50 energy
       this.inventory.addMaterial(item, qty);
@@ -180,15 +182,15 @@ export class FactorySystem {
   deserialize(data) {
     if (!data) return;
     if (data.buffs) {
-      if (data.buffs.quantum_processor_ring && !this.buffs.quantum_processor_ring) {
-        this.buffs.quantum_processor_ring = true;
+      if ((data.buffs.logicite_matrix || data.buffs.quantum_processor_ring) && !this.buffs.logicite_matrix) {
+        this.buffs.logicite_matrix = true;
         this.ppSystem.globalMultiplier *= 1.20;
       }
-      if (data.buffs.exo_servo_harness && !this.buffs.exo_servo_harness) {
-        this.buffs.exo_servo_harness = true;
+      if ((data.buffs.fractalite_frame || data.buffs.exo_servo_harness) && !this.buffs.fractalite_frame) {
+        this.buffs.fractalite_frame = true;
       }
-      if (data.buffs.aegis_capacitor_bank && !this.buffs.aegis_capacitor_bank) {
-        this.buffs.aegis_capacitor_bank = true;
+      if ((data.buffs.aetherite_core || data.buffs.aegis_capacitor_bank) && !this.buffs.aetherite_core) {
+        this.buffs.aetherite_core = true;
       }
     }
     

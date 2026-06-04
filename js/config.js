@@ -77,7 +77,7 @@ export const CONFIG = {
   ENERGY_COST_GATHER: 8,    // per resource node gather
   ENERGY_COST_TREE: 12,     // per tree clear
   ENERGY_COST_ROCK: 15,     // per rock drill
-  ENERGY_COST_PLANT: 5,     // per seed plant
+  ENERGY_COST_PLANT: 5,     // per verdanite plant
 
   // Gathering
   BASE_GATHER_TIME: 2.0,    // seconds

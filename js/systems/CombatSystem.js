@@ -266,12 +266,14 @@ export class CombatSystem {
 
   _rollDrops(archetype) {
     const DROP_TABLES = {
-      rusher:  [{ mat: 'circuitWire',    label: 'Circuit Wire',    chance: 0.60 },
-                { mat: 'ironSpike',      label: 'Iron Spike',      chance: 0.30 }],
-      swinger: [{ mat: 'powerCore',      label: 'Power Core',      chance: 0.40 },
-                { mat: 'armorPlate',     label: 'Armor Plate',     chance: 0.20 }],
-      burst:   [{ mat: 'burstCapacitor', label: 'Burst Capacitor', chance: 0.60 },
-                { mat: 'logicChip',      label: 'Logic Chip',      chance: 0.30 }],
+      rusher:  [{ mat: 'logicite',  label: 'Logicite',  chance: 0.60 },
+                { mat: 'piedral',   label: 'Piedral',   chance: 0.30 },
+                { mat: 'knochel',   label: 'Knochel',   chance: 0.20 }],
+      swinger: [{ mat: 'aetherite', label: 'Aetherite', chance: 0.40 },
+                { mat: 'bronzura',  label: 'Bronzura',  chance: 0.20 },
+                { mat: 'knochel',   label: 'Knochel',   chance: 0.25 }],
+      burst:   [{ mat: 'fractalite',label: 'Fractalite',chance: 0.60 },
+                { mat: 'logicite',  label: 'Logicite',  chance: 0.30 }],
     };
     const table = DROP_TABLES[archetype] || [];
     for (const { mat, label, chance } of table) {

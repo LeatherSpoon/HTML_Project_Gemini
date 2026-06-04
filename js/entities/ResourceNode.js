@@ -10,14 +10,13 @@ const NODE_VISUALS = {
   quartz:   { color: 0xddccff, shape: 'crystal', height: 0.7 },
   silica:   { color: 0xeeddaa, shape: 'rock',    height: 0.4 },
   carbon:   { color: 0x333333, shape: 'rock',    height: 0.45 },
-  gold:     { color: 0xffcc44, shape: 'crystal', height: 0.65 },
-  silver:   { color: 0xccddee, shape: 'crystal', height: 0.6 },
-  titanium: { color: 0x88aacc, shape: 'rock',    height: 0.6 },
-  tungsten: { color: 0x445566, shape: 'rock',    height: 0.55 },
-  resin:        { color: 0xaa7722, shape: 'plant',   height: 0.45 },
-  ferrous_ore:  { color: 0x8b3a1a, shape: 'rock',    height: 0.55 },
-  silica_sand:  { color: 0xe8d89a, shape: 'rock',    height: 0.35 },
-  carbon_biomass: { color: 0x2a3d1a, shape: 'plant', height: 0.5  },
+  gold:      { color: 0xffcc44, shape: 'crystal', height: 0.65 },
+  orosil:    { color: 0xddbb55, shape: 'crystal', height: 0.6 },
+  fractalite:{ color: 0x9955ee, shape: 'crystal', height: 0.65 },
+  tobarba:   { color: 0x885544, shape: 'rock',    height: 0.55 },
+  resin:     { color: 0xaa7722, shape: 'plant',   height: 0.45 },
+  verdanite: { color: 0x3aaa44, shape: 'plant',   height: 0.5  },
+  basalva:   { color: 0xcc4422, shape: 'rock',    height: 0.35 },
 };
 
 let nodeIdCounter = 0;
