@@ -48,6 +48,18 @@ const INV_ICONS = {
   logicite_matrix:   { bg:'#001422', border:'#0066ff', label:'LM', r:'50%' },
   fractalite_frame:  { bg:'#1a1400', border:'#eecc00', label:'FF', r:'2px' },
   aetherite_core:    { bg:'#1a0016', border:'#ff0099', label:'AC', r:'50%' },
+  // Assembly Matrix intermediates
+  iron_dust:      { bg:'#1a1a1a', border:'#666666', label:'Id', r:'2px' },
+  metal_strut:    { bg:'#1a1e22', border:'#778899', label:'Ms', r:'2px' },
+  alloy_bar:      { bg:'#1a1000', border:'#aa8833', label:'Ab', r:'2px' },
+  hull_plating:   { bg:'#0a1420', border:'#336688', label:'Pl', r:'2px' },
+  data_cable:     { bg:'#000a1a', border:'#0055cc', label:'Cb', r:'50%' },
+  micro_fastener: { bg:'#141414', border:'#aaaaaa', label:'Mf', r:'2px' },
+  // Assembly Matrix outputs
+  extractor_unit:     { bg:'#1a1000', border:'#cc6600', label:'Xu', r:'4px' },
+  extractor_unit_adv: { bg:'#0a001a', border:'#9944dd', label:'Xa', r:'4px' },
+  circuit_board:      { bg:'#001a08', border:'#00aa44', label:'Ci', r:'2px' },
+  hull_segment:       { bg:'#081018', border:'#446699', label:'Hs', r:'2px' },
   // Consumables (circle icons)
   ration:        { bg:'#221400', border:'#886622', label:'Ra', r:'50%' },
   firstAid:      { bg:'#280008', border:'#cc2233', label:'HP', r:'50%' },

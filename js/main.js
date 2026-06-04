@@ -959,11 +959,15 @@ function handleGathering(delta) {
     const result = player.getGatherResult();
     if (result) {
       const focusBonus = techTree?.owned.has('materialFocus') ? 1 : 0;
-      inventorySystem.addMaterial(result.material, result.amount + focusBonus);
+      const perceptionLevel = statsSystem.stats.perception.level;
+      const perceptionBonus = (perceptionLevel > 0 && Math.random() < perceptionLevel * 0.03) ? 1 : 0;
+      const totalAmount = result.amount + focusBonus + perceptionBonus;
+      inventorySystem.addMaterial(result.material, totalAmount);
       hud.hideGatherProgress();
-      hud.showInteractHint(`+${result.amount + focusBonus} ${result.material}`);
+      const bonusText = perceptionBonus ? ' (bonus!)' : '';
+      hud.showInteractHint(`+${totalAmount} ${result.material}${bonusText}`);
       _gatherHintCooldown = 1.5;
-      gameStats.recordGather(result.amount);
+      gameStats.recordGather(totalAmount);
       telemetry.trackGather('complete', result.material);
       questSystem.recordGather(env.currentZone, inventorySystem.materials);
     }

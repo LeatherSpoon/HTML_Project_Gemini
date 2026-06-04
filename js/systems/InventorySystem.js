@@ -23,7 +23,11 @@ const MATERIAL_NAMES = [
   // Factory Refined
   'vitrion',
   // Factory Artifacts (one-time global buff)
-  'logicite_matrix', 'fractalite_frame', 'aetherite_core'
+  'logicite_matrix', 'fractalite_frame', 'aetherite_core',
+  // Assembly Matrix intermediate materials
+  'iron_dust', 'metal_strut', 'alloy_bar', 'hull_plating', 'data_cable', 'micro_fastener',
+  // Assembly Matrix outputs
+  'extractor_unit', 'extractor_unit_adv', 'circuit_board', 'hull_segment'
 ];
 
 export class InventorySystem {
